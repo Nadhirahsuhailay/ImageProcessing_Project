@@ -1,0 +1,9 @@
+function show_credits
+    figure('Name','Developer Credits');
+    % Add your real data here
+    img1 = imread('member1.jpg'); % Add real photo
+    img2 = imread('member2.jpg'); % Add real photo
+
+    subplot(1,2,1), imshow(img1), title({'Name: Nadhirah Suhailay', 'Matric: A22XXXX'});
+    subplot(1,2,2), imshow(img2), title({'Name: Teammate Name', 'Matric: A22YYYY'});
+end
