@@ -1,0 +1,65 @@
+function process_with_adaptive_median()
+    % Create a new figure for Adaptive Median Filter processing
+    fig = figure('Name', 'Adaptive Median Filter Processing', ...
+        'NumberTitle', 'off', 'Position', [500, 200, 700, 500], ...
+        'Color', [0.9 0.9 0.9], 'MenuBar', 'none', 'Resize', 'off');
+
+    % Add title
+    uicontrol('Style', 'text', ...
+        'String', 'Adaptive Median Filter Image Restoration', ...
+        'FontSize', 18, 'FontWeight', 'bold', ...
+        'Position', [150, 440, 400, 40], ...
+        'BackgroundColor', [0.9 0.9 0.9], ...
+        'HorizontalAlignment', 'center');
+
+    % Upload Button
+    uicontrol('Style', 'pushbutton', ...
+        'String', 'Upload Image', ...
+        'FontSize', 12, ...
+        'Position', [50, 400, 150, 40], ...
+        'BackgroundColor', [0.4 0.6 0.8], ...
+        'Callback', @upload_image);
+
+    % Axes for displaying images
+    ax1 = axes('Parent', fig, 'Units', 'pixels', 'Position', [50, 100, 250, 250]);
+    ax2 = axes('Parent', fig, 'Units', 'pixels', 'Position', [400, 100, 250, 250]);
+
+    % Back Button
+    uicontrol('Style', 'pushbutton', ...
+        'String', 'Back', ...
+        'FontSize', 12, ...
+        'Position', [275, 20, 150, 40], ...
+        'BackgroundColor', [0.7 0.3 0.3], ...
+        'ForegroundColor', 'white', ...
+        'Callback', @go_back);
+
+    % Nested function to upload and process image
+    function upload_image(~, ~)
+        [file, path] = uigetfile({'*.jpg;*.png;*.bmp', 'Image Files'}, 'Select an Image');
+        if isequal(file, 0)
+            return;
+        end
+        img = imread(fullfile(path, file));
+
+        % Check if the image is RGB, if so, convert to grayscale
+        if size(img, 3) == 3
+            img = rgb2gray(img);
+        end
+
+        % Simulate salt-and-pepper noise
+        noisy_img = imnoise(img, 'salt & pepper', 0.05); 
+
+        % Apply Adaptive Median Filter
+        restored = adaptive_median_filter(noisy_img, 5);  
+
+        % Display original (noisy) and restored images
+        axes(ax1); imshow(noisy_img); title('Noisy Image');
+        axes(ax2); imshow(restored); title('Restored with Adaptive Median Filter');
+    end
+
+    % Back to processing menu
+    function go_back(~, ~)
+        close(fig);
+        image_processing_menu;
+    end
+end
